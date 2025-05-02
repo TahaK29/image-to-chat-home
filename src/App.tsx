@@ -33,7 +33,7 @@ const App = () => {
         <Sonner />
 
         {/* ✅ Routing setup */}
-        <BrowserRouter basename="/image-to-chat-home-main">
+        <BrowserRouter basename="/image-to-chat-home">
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="*" element={<NotFound />} />
