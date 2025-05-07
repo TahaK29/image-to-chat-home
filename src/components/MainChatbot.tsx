@@ -86,7 +86,7 @@ const MainChatbot: React.FC<MainChatbotProps> = ({ initialQuery = "", onClose })
   }, [messages, botTyping]);
 
   return (
-    <div className="relative w-full max-w-5xl mx-auto mt-10 flex flex-col bg-black text-white rounded-lg overflow-hidden">
+    <div className="relative w-full max-w-5xl mx-auto mt-10 flex flex-col bg-black text-white rounded-lg overflow-hidden h-[calc(100vh-200px)]">
 
       {/* ✅ Fixed top-right Close button */}
       <button
@@ -100,7 +100,7 @@ const MainChatbot: React.FC<MainChatbotProps> = ({ initialQuery = "", onClose })
       {/* ✅ Chatbox */}
       <div
         ref={chatboxRef}
-        className="flex-1 overflow-y-auto space-y-4 px-6 pt-6 pb-2 h-[450px] bg-black"
+        className="flex-1 overflow-y-auto space-y-4 px-6 pt-6 pb-2 bg-black"
       >
         {messages.map((msg, i) => (
           <div
