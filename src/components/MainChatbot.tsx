@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ArrowUp, X } from "lucide-react";
+import { ArrowUp, ArrowDown, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createDirectLine } from "botframework-webchat";
 import { marked } from "marked";
@@ -30,6 +30,7 @@ const MainChatbot: React.FC<MainChatbotProps> = ({ initialQuery = "", onClose })
   const [botTyping, setBotTyping] = useState(false);
   const chatboxRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -80,8 +81,33 @@ const MainChatbot: React.FC<MainChatbotProps> = ({ initialQuery = "", onClose })
   };
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (chatboxRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = chatboxRef.current;
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
+      if (isNearBottom) {
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   }, [messages, botTyping]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (chatboxRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = chatboxRef.current;
+        setShowScrollButton(scrollHeight - scrollTop - clientHeight > 100);
+      }
+    };
+
+    const chatbox = chatboxRef.current;
+    if (chatbox) {
+      chatbox.addEventListener('scroll', handleScroll);
+      return () => chatbox.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
+
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <div className="w-full h-full flex flex-col text-white">
@@ -95,7 +121,11 @@ const MainChatbot: React.FC<MainChatbotProps> = ({ initialQuery = "", onClose })
 
       <div
         ref={chatboxRef}
-        className="flex-1 overflow-y-auto space-y-4 px-6 pt-20 pb-2"
+        className="flex-1 overflow-y-auto space-y-4 px-6 pt-20 pb-2 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent"
+        style={{
+          maxHeight: 'calc(100vh - 180px)', // Adjust this value based on your header/footer height
+          scrollBehavior: 'smooth'
+        }}
       >
         {messages.map((msg, i) => (
           <div
@@ -133,6 +163,16 @@ const MainChatbot: React.FC<MainChatbotProps> = ({ initialQuery = "", onClose })
 
         <div ref={bottomRef} />
       </div>
+
+      {showScrollButton && (
+        <button
+          onClick={scrollToBottom}
+          className="fixed bottom-24 right-8 z-50 bg-marlabs-green hover:bg-marlabs-blue text-white rounded-full p-3 shadow-lg transition-all duration-300"
+          aria-label="Scroll to bottom"
+        >
+          <ArrowDown className="h-5 w-5" />
+        </button>
+      )}
 
       <form onSubmit={handleSubmit} className="m-4 relative w-full max-w-4xl mx-auto">
         <textarea
