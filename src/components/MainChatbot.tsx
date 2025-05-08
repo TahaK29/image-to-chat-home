@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowUp, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { createDirectLine } from "botframework-webchat";
 import { marked } from "marked";
 
@@ -15,7 +14,6 @@ interface ChatMessage {
   text: string;
 }
 
-// ✅ DO NOT TOUCH THIS FUNCTION
 function formatBotMessage(text: string) {
   const urlRegex = /\[(\d+)\]: (https?:\/\/[^\s]+)\s+"([^"]+)"/g;
   return text.replace(
@@ -86,21 +84,18 @@ const MainChatbot: React.FC<MainChatbotProps> = ({ initialQuery = "", onClose })
   }, [messages, botTyping]);
 
   return (
-    <div className="relative w-full max-w-5xl mx-auto mt-10 flex flex-col bg-black text-white rounded-lg overflow-hidden h-[calc(100vh-200px)]">
-
-      {/* ✅ Fixed top-right Close button */}
+    <div className="w-full h-full flex flex-col text-white">
       <button
         onClick={onClose}
-        className="fixed top-20 right-750 z-50 text-white bg-gray-800 hover:bg-gray-700 rounded-full p-2 shadow-md"
+        className="fixed top-4 right-4 z-50 text-white bg-transparent hover:bg-gray-700 rounded-full p-2"
         aria-label="Close chat"
       >
         <X className="w-5 h-5" />
       </button>
 
-      {/* ✅ Chatbox */}
       <div
         ref={chatboxRef}
-        className="flex-1 overflow-y-auto space-y-4 px-6 pt-6 pb-2 bg-black"
+        className="flex-1 overflow-y-auto space-y-4 px-6 pt-20 pb-2"
       >
         {messages.map((msg, i) => (
           <div
@@ -108,14 +103,14 @@ const MainChatbot: React.FC<MainChatbotProps> = ({ initialQuery = "", onClose })
             className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={`max-w-[80%] px-4 py-3 text-sm rounded-lg ${
+              className={`max-w-[80%] px-4 py-3 text-[15px] leading-relaxed tracking-normal whitespace-pre-wrap rounded-xl ${
                 msg.type === "user"
                   ? "bg-blue-600 text-white rounded-br-none"
-                  : "bg-black text-white border border-black rounded-bl-none"
+                  : "bg-gray-800 text-white border border-gray-700 rounded-bl-none"
               }`}
             >
               <div
-                className="prose prose-invert text-sm"
+                className="prose prose-invert prose-p:my-2 prose-li:my-1 text-sm"
                 dangerouslySetInnerHTML={{
                   __html: marked.parse(formatBotMessage(msg.text)),
                 }}
@@ -124,10 +119,9 @@ const MainChatbot: React.FC<MainChatbotProps> = ({ initialQuery = "", onClose })
           </div>
         ))}
 
-        {/* ✅ Typing dots */}
         {botTyping && (
-          <div className="flex justify-start">
-            <div className="bg-black text-white text-sm px-4 py-3 rounded-lg border border-gray-700 rounded-bl-none">
+          <div className="flex justify-start px-6">
+            <div className="text-white text-sm px-4 py-3">
               <div className="flex space-x-1">
                 <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
                 <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
@@ -137,12 +131,10 @@ const MainChatbot: React.FC<MainChatbotProps> = ({ initialQuery = "", onClose })
           </div>
         )}
 
-        {/* ✅ Scroll anchor */}
         <div ref={bottomRef} />
       </div>
 
-      {/* ✅ Input area */}
-      <form onSubmit={handleSubmit} className="m-4 relative w-full max-w-4xl">
+      <form onSubmit={handleSubmit} className="m-4 relative w-full max-w-4xl mx-auto">
         <textarea
           placeholder="Type your message..."
           value={userInput}
@@ -154,7 +146,7 @@ const MainChatbot: React.FC<MainChatbotProps> = ({ initialQuery = "", onClose })
             }
           }}
           rows={1}
-          className="w-full pr-12 pl-6 py-4 text-white text-sm bg-black resize-none rounded-full border border-gray-700 placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-gray-700 shadow-none leading-tight"
+          className="w-full pr-12 pl-6 py-3 text-white text-sm bg-gray-900 resize-none rounded-full border border-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-marlabs-green focus:border-marlabs-green leading-snug"
         />
         <Button
           type="submit"
