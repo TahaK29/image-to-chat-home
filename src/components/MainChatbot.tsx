@@ -23,7 +23,7 @@ function formatBotMessage(text: string) {
   );
 }
 
-const AZURE_FUNCTION_URL = `https://marlabs-server-webbot.azurewebsites.net/api/HttpTrigger1?code=${import.meta.env.VITE_AZURE_FUNC_KEY}`;
+const AZURE_FUNCTION_URL = 'https://marlabs-server-webbot.azurewebsites.net/api/HttpTrigger1?code=YXSCAUXr5wu2qsi9A0bRhq1qPYgiSgbPN8x-u_Segl2qAzFuprs8Dg==';
 
 const MainChatbot: React.FC<MainChatbotProps> = ({ initialQuery = "", onClose }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
