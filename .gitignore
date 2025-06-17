@@ -26,3 +26,4 @@ dist-ssr
 #Stuff to hide 
 .env
 .env.*.env
+.env
